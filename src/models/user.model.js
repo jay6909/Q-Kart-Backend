@@ -1,7 +1,9 @@
 const mongoose = require("mongoose");
 // NOTE - "validator" external library and not the custom middleware at src/middlewares/validate.js
 const validator = require("validator");
+const { User } = require(".");
 const config = require("../config/config");
+
 
 // TODO: CRIO_TASK_MODULE_UNDERSTANDING_BASICS - Complete userSchema, a Mongoose schema for "users" collection
 const userSchema = mongoose.Schema(
@@ -43,8 +45,10 @@ const userSchema = mongoose.Schema(
  * @returns {Promise<boolean>}
  */
 userSchema.statics.isEmailTaken = async function (email) {
+  const res= this.find({email})
+  if(res) return true
+  return false
 };
-
 
 
 // TODO: CRIO_TASK_MODULE_UNDERSTANDING_BASICS
@@ -56,3 +60,4 @@ userSchema.statics.isEmailTaken = async function (email) {
 /**
  * @typedef User
  */
+ module.exports = mongoose.model("User", userSchema);
