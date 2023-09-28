@@ -44,10 +44,12 @@ const userSchema = mongoose.Schema(
  * @param {string} email - The user's email
  * @returns {Promise<boolean>}
  */
-userSchema.statics.isEmailTaken = async function (email) {
-  const res= this.find({email})
-  if(res) return true
-  return false
+  const isEmailTaken=userSchema.statics.isEmailTaken = async function (email) {
+    if(!email) return false 
+  const res= mongoose.model("User",userSchema).exists({email})
+  return res
+
+
 };
 
 
@@ -60,4 +62,4 @@ userSchema.statics.isEmailTaken = async function (email) {
 /**
  * @typedef User
  */
- module.exports = mongoose.model("User", userSchema);
+ module.exports ={ User:mongoose.model("User", userSchema),isEmailTaken};

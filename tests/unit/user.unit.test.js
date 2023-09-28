@@ -1,4 +1,4 @@
-const { User } = require("../../src/models");
+const { User, isEmailTaken } = require("../../src/models");
 const { userOne } = require("../fixtures/user.fixture");
 const { userService } = require("../../src/services");
 const ApiError = require("../../src/utils/ApiError");
@@ -40,7 +40,7 @@ describe("User test", () => {
     it("should return user if success", async () => {
       // Hijack the User.isEmailTaken() call to always return false
       let isEmailTakenMock = jest.fn();
-      User.isEmailTaken = isEmailTakenMock.mockReturnValue(false);
+      isEmailTaken = isEmailTakenMock.mockReturnValue(false);
 
       // Hijack the User.create() call to always return userOne object
       let createMock = jest.fn();
