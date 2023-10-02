@@ -38,19 +38,21 @@ const { userService } = require("../services");
  * @returns {User | {address: String}}
  *
  */
-const getUser = catchAsync(async (req,res) => {
+const getUser = catchAsync(async (req,res,next) => {
   // const uid=req.query.id.toString()
-  const uid=req.params[0].toString()
-  const data= await userService.getUserById(uid)
-  
-  if(data) return res.status(200).send(data)
-  return res.send (new ApiError(httpStatus.NOT_FOUND,"User not found"))
+  const userId=req.params.userId.toString()
+  // console.log(userId)
+  const data= await userService.getUserById(userId)
+  if(!data) throw new ApiError(httpStatus.BAD_REQUEST,"")
+
+  return res.status(200).json(data).send()
 
 });
 
-// const create=catchAsync(async(req,res)=>{
-//     userService.createUser(req)
-// })
+const createUser=catchAsync(async(req,res)=>{
+    const user=userService.createUser(req)
+    // if(!user) throw new ApiError()
+})
 
 
 module.exports = {

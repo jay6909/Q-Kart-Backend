@@ -1,4 +1,4 @@
-const { User, isEmailTaken } = require("../models");
+const { User,isEmailTaken } = require("../models");
 const httpStatus = require("http-status");
 const ApiError = require("../utils/ApiError");
 const bcrypt = require("bcryptjs");
@@ -10,10 +10,11 @@ const bcrypt = require("bcryptjs");
  * @param {String} id
  * @returns {Promise<User>}
  */
-async function getUserById(id) {
-  const data = await User.findById(id);
+const getUserById=async (id) =>{
+  const user = await User.findById(id);
   // console.log("ssssssssssss",data)
-  return data;
+  if(!user) throw new ApiError(httpStatus.NOT_FOUND,"User not found")
+  return user;
 }
 
 // TODO: CRIO_TASK_MODULE_UNDERSTANDING_BASICS - Implement getUserByEmail(email)
@@ -51,12 +52,23 @@ async function getUserByEmail(email) {
  * 200 status code on duplicate email - https://stackoverflow.com/a/53144807
  */
 
-async function createUser(userBody) {
-  const isTaken = isEmailTaken(userBody.email);
-  if (!isTaken) {
+const createUser=async (userBody)=> {
+
+  if(userBody){
+    const isTaken = await isEmailTaken(userBody.email);
+  
+    console.log(isTaken)
+    if (isTaken) {   
+      // console.log("haha")
+      throw new ApiError(httpStatus.CONFLICT,"Email already taken")
+    }
     const user=await User.create(userBody)
+
     return user
+    // console.log(user)
   }
-  throw new ApiError(httpStatus[200],"Email already taken")
+  console.log("no user data. Can't create account")
+ 
+
 }
 module.exports = { createUser, getUserByEmail, getUserById };

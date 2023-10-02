@@ -44,10 +44,22 @@ const userSchema = mongoose.Schema(
  * @param {string} email - The user's email
  * @returns {Promise<boolean>}
  */
-  const isEmailTaken=userSchema.statics.isEmailTaken = async function (email) {
-    if(!email) return false 
-  const res= mongoose.model("User",userSchema).exists({email})
-  return res
+
+  const isEmailTaken = userSchema.statics.isEmailTaken = async function (email) {
+    // if(!email) return false 
+    
+    // try {
+    // if(!res) return false
+      // return boolean(res)
+      const  res=  await mongoose.model("User",userSchema).findOne({email})
+      return res
+
+      //  const wha=new Promise((reject,resolve)=>{
+      //   if(res) return reject(false)
+      //   return resolve("not taken")
+      // })
+      // return new 
+      
 
 
 };
@@ -62,4 +74,5 @@ const userSchema = mongoose.Schema(
 /**
  * @typedef User
  */
+
  module.exports ={ User:mongoose.model("User", userSchema),isEmailTaken};
