@@ -52,9 +52,10 @@ const getUser = catchAsync(async (req,res,next) => {
 const createUser=catchAsync(async(req,res)=>{
     const user=userService.createUser(req)
     // if(!user) throw new ApiError()
+    return res.send(user)
 })
 
 
 module.exports = {
-  getUser,
+  getUser,createUser
 };

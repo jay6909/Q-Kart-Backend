@@ -4,7 +4,8 @@ const userValidation = require("../../validations/user.validation");
 const userController = require("../../controllers/user.controller");
 const { isEmailTaken } = require("../../models/user.model");
 const { User } = require("../../models");
-const mongoose=require('mongoose')
+const mongoose=require('mongoose');
+const { userService } = require("../../services");
 const router = express.Router();
 
 // router.use( validate(userValidation.getUser))
@@ -17,6 +18,7 @@ router.get(
   validate(userValidation.getUser),
   userController.getUser
 );
+router.post("/register",userController.createUser);
 // router.get("/:userId", async (req, res) => {
 
 //    const boolTaken=await isEmailTaken("test@gmail.com")
@@ -35,8 +37,6 @@ router.get(
   
 // });
 
-// router.post("/register",(req,res)=>{
-//     res.send(req.body)
-// })
+
 
 module.exports = router;

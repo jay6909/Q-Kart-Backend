@@ -52,7 +52,7 @@ const userSchema = mongoose.Schema(
     // if(!res) return false
       // return boolean(res)
       const  res=  await mongoose.model("User",userSchema).findOne({email})
-      return res
+      
 
       //  const wha=new Promise((reject,resolve)=>{
       //   if(res) return reject(false)

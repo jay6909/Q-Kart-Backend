@@ -57,10 +57,10 @@ const createUser=async (userBody)=> {
   if(userBody){
     const isTaken = await isEmailTaken(userBody.email);
   
-    console.log(isTaken)
+    // console.log(isTaken)
     if (isTaken) {   
       // console.log("haha")
-      throw new ApiError(httpStatus.CONFLICT,"Email already taken")
+      throw new ApiError(httpStatus[200],"Email already taken")
     }
     const user=await User.create(userBody)
 
