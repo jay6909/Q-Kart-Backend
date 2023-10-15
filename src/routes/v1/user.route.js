@@ -18,7 +18,8 @@ router.get(
   validate(userValidation.getUser),
   userController.getUser
 );
-router.post("/register",userController.createUser);
+
+// router.post("/register",userController.createUser);
 // router.get("/:userId", async (req, res) => {
 
 //    const boolTaken=await isEmailTaken("test@gmail.com")

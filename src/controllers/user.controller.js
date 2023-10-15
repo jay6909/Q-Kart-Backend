@@ -2,6 +2,7 @@ const httpStatus = require("http-status");
 const ApiError = require("../utils/ApiError");
 const catchAsync = require("../utils/catchAsync");
 const { userService } = require("../services");
+const { User } = require("../models");
 
 // TODO: CRIO_TASK_MODULE_UNDERSTANDING_BASICS - Implement getUser() function
 /**
@@ -38,24 +39,18 @@ const { userService } = require("../services");
  * @returns {User | {address: String}}
  *
  */
-const getUser = catchAsync(async (req,res,next) => {
+const getUser = catchAsync(async (req,res) => {
   // const uid=req.query.id.toString()
-  const userId=req.params.userId.toString()
+  const userId=req.params.userId
   // console.log(userId)
   const data= await userService.getUserById(userId)
   if(!data) throw new ApiError(httpStatus.BAD_REQUEST,"")
 
-  return res.status(200).json(data).send()
+  return res.status(200).send(data)
 
 });
 
-const createUser=catchAsync(async(req,res)=>{
-    const user=userService.createUser(req)
-    // if(!user) throw new ApiError()
-    return res.send(user)
-})
-
-
 module.exports = {
-  getUser,createUser
+  getUser,
+  
 };

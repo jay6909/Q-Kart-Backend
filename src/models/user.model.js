@@ -1,7 +1,6 @@
 const mongoose = require("mongoose");
 // NOTE - "validator" external library and not the custom middleware at src/middlewares/validate.js
 const validator = require("validator");
-const { User } = require(".");
 const config = require("../config/config");
 
 
@@ -14,9 +13,22 @@ const userSchema = mongoose.Schema(
       trim: true,
     },
     email: {
+      type: String,
+      required: true,
+      trim: true,
+      unique: true,
+      lowercase: true,
+      validate(value) {
+        if (!validator.isEmail(value)) {
+          throw new Error("Invalid Email");
+        }
+      },
     },
     password: {
       type: String,
+      requried: true,
+      trim: true,
+      minlength: 8,
       validate(value) {
         if (!value.match(/\d/) || !value.match(/[a-zA-Z]/)) {
           throw new Error(
@@ -26,6 +38,9 @@ const userSchema = mongoose.Schema(
       },
     },
     walletMoney: {
+      type: Number,
+      required: true,
+      default: config.default_wallet_money,
     },
     address: {
       type: String,
@@ -44,35 +59,12 @@ const userSchema = mongoose.Schema(
  * @param {string} email - The user's email
  * @returns {Promise<boolean>}
  */
-
-  const isEmailTaken = userSchema.statics.isEmailTaken = async function (email) {
-    // if(!email) return false 
-    
-    // try {
-    // if(!res) return false
-      // return boolean(res)
-      const  res=  await mongoose.model("User",userSchema).findOne({email})
-      
-
-      //  const wha=new Promise((reject,resolve)=>{
-      //   if(res) return reject(false)
-      //   return resolve("not taken")
-      // })
-      // return new 
-      
+  userSchema.statics.isEmailTaken = async function (email) {
+    const user = await this.findOne({ email: email });
+    return user;
+  };
 
 
-};
 
-
-// TODO: CRIO_TASK_MODULE_UNDERSTANDING_BASICS
-/*
- * Create a Mongoose model out of userSchema and export the model as "User"
- * Note: The model should be accessible in a different module when imported like below
- * const User = require("<user.model file path>").User;
- */
-/**
- * @typedef User
- */
-
- module.exports ={ User:mongoose.model("User", userSchema),isEmailTaken};
+const User = mongoose.model("User", userSchema);
+module.exports = { User };

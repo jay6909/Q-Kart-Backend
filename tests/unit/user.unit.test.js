@@ -3,7 +3,6 @@ const { userOne } = require("../fixtures/user.fixture");
 const { userService } = require("../../src/services");
 const ApiError = require("../../src/utils/ApiError");
 const mockingoose = require("mockingoose").default;
-let {isEmailTaken}=require("../../src/models")
 
 describe("User test", () => {
   beforeEach(() => {
@@ -41,14 +40,13 @@ describe("User test", () => {
     it("should return user if success", async () => {
       // Hijack the User.isEmailTaken() call to always return false
       let isEmailTakenMock = jest.fn();
-      isEmailTaken = isEmailTakenMock.mockReturnValue(false);
+      User.isEmailTaken = isEmailTakenMock.mockReturnValue(false);
 
       // Hijack the User.create() call to always return userOne object
       let createMock = jest.fn();
       User.create = createMock.mockReturnValue(userOne);
 
       let userResponse = await userService.createUser(userOne);
-      // console.log(userResponse)
       // Check if the User.create() method got called by checking the mock function
       expect(createMock).toBeCalled();
       expect(isEmailTakenMock).toBeCalled();
@@ -58,7 +56,7 @@ describe("User test", () => {
     });
 
     it("should throw error if email already exists", async () => {
-      isEmailTaken = jest.fn().mockReturnValue(true);
+      User.isEmailTaken = jest.fn().mockReturnValue(true);
 
       expect(userService.createUser(userOne)).rejects.toThrow(ApiError);
     });
